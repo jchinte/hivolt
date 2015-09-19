@@ -281,6 +281,8 @@ public class GameBoard extends JPanel implements KeyListener {
 		c.weighty = 1.0;
 		gameObjects[newEmpty.gameGetX()][newEmpty.gameGetY()] = newEmpty;
 		add(newEmpty, c);
+		invalidate();
+		validate();
 	}
 	private boolean boardEmpty(int newX, int newY) {
 		return gameObjects[newX][newY].getClass() == EmptySpace.class;
