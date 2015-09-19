@@ -14,6 +14,7 @@ public class Mho extends GameObject {
 
 	}
 	public void paint(Graphics g){
+		System.err.println("Mho drawn at "+gameGetX()+", "+gameGetY());
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, getWidth(), getHeight());
 	}

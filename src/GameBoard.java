@@ -16,9 +16,12 @@ public class GameBoard extends JPanel implements KeyListener {
 	private List<GameObject> mhos;
 	private Player player;
 	private boolean gameOver;
+	
+	private boolean moving;
 	public GameBoard(){
 		super();
 		gameOver = false;
+		moving = false;
 		layout = new GridBagLayout();
 		setLayout(layout);
 		gameObjects = new GameObject[12][12];
@@ -91,7 +94,7 @@ public class GameBoard extends JPanel implements KeyListener {
 			}
 			c.gridx = x;
 			c.gridy = y;
-			player = new Player(x,y);
+			player = new Player(x,y, this);
 			gameObjects[x][y] = player;
 		}
 
@@ -118,9 +121,15 @@ public class GameBoard extends JPanel implements KeyListener {
 		super.paint(g);
 		System.err.println("Width: "+getWidth() + "; height: " + getHeight());
 	}
+	public void move(){
+		moving = true;
+	}
+	public void stop(){
+		moving = false;
+	}
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		if (!gameOver){
+		if (!gameOver && !moving){
 			int newX, newY;
 			if (arg0.getKeyCode()==KeyEvent.VK_W){
 				newX = player.gameGetX();
@@ -171,7 +180,7 @@ public class GameBoard extends JPanel implements KeyListener {
 				return;
 			}
 			if (boardEmpty(newX, newY)||boardPlayer(newX, newY)){
-				swap(player.gameGetX(),player.gameGetY(),newX, newY);
+				player.moveTo(newX, newY);
 			}
 			else {
 				System.out.println("You died.");
@@ -314,7 +323,10 @@ public class GameBoard extends JPanel implements KeyListener {
 		c.gridx = bx;
 		c.gridy = by;
 		add(a, c);
-		revalidate();
-		repaint();
+		//layout.invalidateLayout(this);
+		invalidate();
+		validate();
+		//paintImmediately(getVisibleRect());
+		//repaint();
 	}
 }
