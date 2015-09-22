@@ -23,7 +23,7 @@ public class Fence extends GameObject {
 		g2d.setColor(Color.YELLOW);
 		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		rh.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		g2d.addRenderingHints(rh);
+		//g2d.addRenderingHints(rh);
 		double w = getWidth();
 		double h = getHeight();
 		for (int  n = 0; n < 4; n++){

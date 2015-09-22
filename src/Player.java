@@ -25,13 +25,14 @@ public class Player extends GameObject {
 		gameBoard.repaint();
 	}
 	private void fadeOut() {
-		// TODO Auto-generated method stub
 		//flash to white
 		System.err.println("fade out");
+		c = new Color(1,1,255);
 		while (c.getRGB()!=Color.WHITE.getRGB()){
-			c = new Color((256-c.getRed())/2 + c.getRed(),
+			c = c.brighter();
+					/*new Color((256-c.getRed())/2 + c.getRed(),
 					(256-c.getGreen())/2 + c.getGreen(),
-					(256-c.getBlue())/2 + c.getBlue());
+					(256-c.getBlue())/2 + c.getBlue());*/
 			this.paintImmediately(this.getVisibleRect());
 			repaint();
 			System.err.println("color = " + c.toString());
@@ -42,6 +43,7 @@ public class Player extends GameObject {
 				e.printStackTrace();
 			}
 		}
+		
 		//fade out
 		while (c.getRGB()!=Color.BLACK.getRGB()){
 			c = new Color((int)(c.getRed()*0.8), (int)(c.getGreen()*0.8), (int)(c.getBlue()*0.8));

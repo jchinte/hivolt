@@ -18,13 +18,7 @@ public class GameBoard extends JPanel implements KeyListener {
 	private boolean gameOver;
 	
 	private boolean moving;
-	public GameBoard(){
-		super();
-		gameOver = false;
-		moving = false;
-		layout = new GridBagLayout();
-		setLayout(layout);
-		gameObjects = new GameObject[12][12];
+	private GridBagConstraints getConstraints(){
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor=GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;
@@ -33,45 +27,25 @@ public class GameBoard extends JPanel implements KeyListener {
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx =1.0;
-		c.weighty = 1.0;
-		for (int i=0;i<12;i++){
-			c.gridx = i;
-			c.gridy = 0;
-			gameObjects[i][0] = new Fence(i,0);
-			//add(gameObjects[i][0], c);
-		}
-		for (int j=1;j<11;j++){
-			c.gridx = 0;
-			c.gridy = j;
-			gameObjects[0][j] = new Fence(0,j);
-			add(gameObjects[0][j], c);
-			c.gridx = 11;
-			gameObjects[11][j] = new Fence(11,j);
-			//add(gameObjects[11][j], c);
+		c.weighty = 1.0;		
+		return c;
+	}
+	public GameBoard(){
+		super();
+		gameOver = false;
+		moving = false;
+		layout = new GridBagLayout();
+		setLayout(layout);
+		gameObjects = new GameObject[12][12];
+		GridBagConstraints c = getConstraints();
+		
+		makeFence();
 
-		}
-		for (int i=0;i<12;i++){
-			c.gridx = i;
-			c.gridy = 11;
-			gameObjects[i][11] = new Fence(i,11);
-			//add(gameObjects[i][11], c);
-		}
 
-		Random rng = new Random();
-		for (int fenceNum=0; fenceNum<20;fenceNum++){
-			//this algorithm will take a while!
-			int x = rng.nextInt(10)+1;
-			int y = rng.nextInt(10)+1;
-			while (gameObjects[x][y]!=null){
-				x = rng.nextInt(10)+1;
-				y = rng.nextInt(10)+1;
-			}
-			c.gridx = x;
-			c.gridy = y;
-			gameObjects[x][y] = new Fence(x,y);
-		}
 
 		mhos = new ArrayList<GameObject>();
+		Random rng = new Random();
+
 		for (int mhoNum=0; mhoNum<12;mhoNum++){
 			//this algorithm will take a while!
 			int x = rng.nextInt(10)+1;
@@ -98,23 +72,58 @@ public class GameBoard extends JPanel implements KeyListener {
 			gameObjects[x][y] = player;
 		}
 
+		makeEmptys();
+		addGameObjects();
+	}
+	/**
+	 * Fill the rest of the board with empty game objects.
+	 * @param c
+	 */
+	private void makeEmptys() {
 		for (int i=1;i<11;i++){
 			for(int j=1;j<11;j++){
 				if (gameObjects[i][j]==null){
-					c.gridx = i;
-					c.gridy = j;
 					gameObjects[i][j] = new EmptySpace(i,j);
 				}
-				//add(gameObjects[i][j], c);
 			}
 		}
+	}
+	/**
+	 * add all the game objects to the grid.
+	 * @param c
+	 */
+	private void addGameObjects() {
 		//add to grid
+		GridBagConstraints c =  getConstraints();
 		for (int i=0; i<12; i++){
 			for (int j=0; j<12; j++){
 				c.gridx = i;
 				c.gridy = j;
-				add(gameObjects[i][j],c);
+				add(gameObjects[i][j],c);   //add the object to (i,j) in the grid.
 			}
+		}
+	}
+	private void makeFence() {
+		for (int i=0;i<12;i++){
+			gameObjects[i][0] = new Fence(i,0);
+		}
+		for (int j=1;j<11;j++){
+			gameObjects[0][j] = new Fence(0,j);
+			gameObjects[11][j] = new Fence(11,j);
+		}
+		for (int i=0;i<12;i++){
+			gameObjects[i][11] = new Fence(i,11);
+		}
+		Random rng = new Random();
+		for (int fenceNum=0; fenceNum<20;fenceNum++){
+			//this algorithm will take a while!
+			int x = rng.nextInt(10)+1;
+			int y = rng.nextInt(10)+1;
+			while (gameObjects[x][y]!=null){
+				x = rng.nextInt(10)+1;
+				y = rng.nextInt(10)+1;
+			}
+			gameObjects[x][y] = new Fence(x,y);
 		}
 	}
 	public void paint(Graphics g){
