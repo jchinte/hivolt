@@ -19,7 +19,7 @@ public class Player extends GameObject {
 	public void moveTo(int x, int y){
 		gameBoard.move();
 		fadeOut();
-		gameBoard.swap(gameGetX(),gameGetY(),x, y);
+		gameBoard.swap(getGameX(),getGameY(),x, y);
 		fadeIn();
 		gameBoard.stop();
 		gameBoard.repaint();
