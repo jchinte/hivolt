@@ -16,6 +16,7 @@ public class GameBoard extends JPanel implements KeyListener {
 	private List<GameObject> mhos;
 	private Player player;
 	private boolean gameOver;
+	private int numMoves;
 	
 	private boolean moving;
 	private GridBagConstraints getConstraints(){
@@ -32,6 +33,7 @@ public class GameBoard extends JPanel implements KeyListener {
 	}
 	public GameBoard(){
 		super();
+		numMoves = 0;
 		gameOver = false;
 		moving = false;
 		layout = new GridBagLayout();
@@ -71,6 +73,10 @@ public class GameBoard extends JPanel implements KeyListener {
 
 		makeEmptys();
 		addGameObjects();
+		WinBox wb = new WinBox(this, 12, 0);
+		wb.getConstraints().gridheight = 12;
+		System.out.println(wb.getConstraints().gridwidth);
+		add(wb, wb.getConstraints());
 	}
 	/**
 	 * Fill the rest of the board with empty game objects.
@@ -130,7 +136,6 @@ public class GameBoard extends JPanel implements KeyListener {
 	public void stop(){
 		moving = false;
 	}
-	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if (!gameOver && !moving){
 			int newX, newY;
@@ -182,12 +187,13 @@ public class GameBoard extends JPanel implements KeyListener {
 			else {
 				return;
 			}
+			numMoves++;
 			if (boardEmpty(newX, newY)||boardPlayer(newX, newY)){
 				player.moveTo(newX, newY);
 			}
 			else {
 				System.out.println("You died.");
-				gameOver = true;
+				endGame();
 			}
 			if (arg0.getKeyCode()==KeyEvent.VK_J) {
 				return;
@@ -195,9 +201,15 @@ public class GameBoard extends JPanel implements KeyListener {
 			moveMhos();
 			if (mhos.size()==0){
 				System.out.println("You won!");
-				gameOver = true;
+				endGame();
 			}
 		}
+	}
+	private void endGame() {
+		invalidate();
+		validate();
+		repaint();
+		gameOver = true;
 	}
 
 	private void moveMhos() {
@@ -217,7 +229,7 @@ public class GameBoard extends JPanel implements KeyListener {
 				System.out.println("You Died!");
 				removefromGame(player);
 				swap(mho.getGameX(), mho.getGameY(), newX, newY);
-				gameOver = true;
+				endGame();
 				return;
 			}
 			if (boardEmpty(newX, newY)){
@@ -294,12 +306,12 @@ public class GameBoard extends JPanel implements KeyListener {
 		return gameObjects[newX][newY].getClass() == Fence.class ||
 				gameObjects[newX][newY].getClass() == Player.class;
 	}
-	@Override
+
 	public void keyReleased(KeyEvent arg0) {
 
 	}
 
-	@Override
+
 	public void keyTyped(KeyEvent arg0) {
 
 	}
@@ -318,4 +330,20 @@ public class GameBoard extends JPanel implements KeyListener {
 		//invalidate();
 		validate();
 	}
+	/**
+	 * @return the numMoves
+	 */
+	public int getNumMoves() {
+		return numMoves;
+	}
+	public int getNumMhos(){
+		return mhos.size();
+	}
+	/**
+	 * @return the gameOver
+	 */
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
 }
